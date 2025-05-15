@@ -1,0 +1,10 @@
+.venv
+.vscode
+.pytest_cache
+__pycache__/
+__pytest_cache__/
+videos
+tmp
+temp
+*.mp4
+*.mp3
