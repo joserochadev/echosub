@@ -3,7 +3,7 @@
 ## 📦 Requisitos Funcionais (RF)
 
 - [x] **RF01** – Permitir que o usuário informe o caminho de um arquivo de vídeo local.
-- [ ] **RF02** – Extrair automaticamente o áudio do vídeo informado.
+- [x] **RF02** – Extrair automaticamente o áudio do vídeo informado.
 - [ ] **RF03** – Transcrever o áudio utilizando o modelo Whisper.
 - [ ] **RF04** – Gerar um arquivo de legendas no formato `.srt`.
 - [ ] **RF05** – Nomear o arquivo `.srt` com base no nome do vídeo original.
