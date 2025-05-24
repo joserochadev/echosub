@@ -18,7 +18,7 @@ class UI:
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("dark-blue")
 
-        self.window = tk.Tk()
+        self.window = ctk.CTk()
 
         self.file_path = tk.StringVar()
         self.status = tk.StringVar(value="Aguardado arquivo...")
@@ -111,79 +111,101 @@ class UI:
         thread.start()
 
     def update(self):
-        frame = tk.LabelFrame(
-            self.window,
-            text="Configurações de Entrada",
-            padx=10,
-            pady=10,
-            relief="groove",
-            bd=2,
-        )
+        # frame = tk.LabelFrame(
+        #     self.window,
+        #     text="Configurações de Entrada",
+        #     padx=10,
+        #     pady=10,
+        #     relief="groove",
+        #     bd=2,
+        # )
+        # frame.pack(pady=20)
+
+        frame = ctk.CTkFrame(self.window, corner_radius=10)
         frame.pack(pady=20)
 
-        input = tk.Entry(frame, textvariable=self.file_path, width=40)
-        input.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        title_input_label = ctk.CTkLabel(frame, text="Configurações de Entrada")
+        title_input_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-        file_button = tk.Button(
-            frame, text="Selecionar Arquivo", command=self.select_file
+        input = ctk.CTkEntry(
+            master=frame,
+            textvariable=self.file_path,
+            corner_radius=8,
+            width=350,
+            height=30,
         )
-        file_button.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+        input.grid(row=1, column=0, padx=5, pady=5, sticky="w")
 
-        model_frame = tk.LabelFrame(
+        file_button = ctk.CTkButton(
             frame,
-            text="Configurações do Modelo",
-            padx=10,
-            pady=10,
-            relief="groove",
-            bd=2,
+            text="Selecionar Arquivo",
+            command=self.select_file,
+            height=30,
+            cursor="hand2",
         )
-        model_frame.grid(row=1, column=0, columnspan=2, sticky="w")
+        file_button.grid(row=1, column=1, padx=5, pady=5, sticky="w")
 
-        model_label = tk.Label(model_frame, text="Modelo:")
-        model_label.pack(side=tk.LEFT, padx=(0, 5))  # Espaço só do label para o combo
+        model_frame = ctk.CTkFrame(frame, corner_radius=10)
+        model_frame.grid(row=2, column=0, pady=10, padx=5, columnspan=2, sticky="w")
 
-        model_select = ttk.Combobox(
+        title_model_label = ctk.CTkLabel(
+            model_frame, text="Configuração do Whisper Model"
+        )
+        title_model_label.pack(padx=10)
+
+        model_label = ctk.CTkLabel(model_frame, text="Modelo:")
+        model_label.pack(side=tk.LEFT, padx=10)  # Espaço só do label para o combo
+
+        model_select = ctk.CTkOptionMenu(
             model_frame,
-            textvariable=self.whisper_model,
             values=self.models,
-            width=10,
+            width=100,
             state="readonly",
+            cursor="hand2",
         )
-        model_select.pack(side=tk.LEFT)
-        model_select.current(1)
+        model_select.pack(side=tk.LEFT, pady=10)
+        model_select.set("base")
 
-        output_frame = tk.LabelFrame(
-            self.window,
-            text="Configurações de Saída",
-            padx=10,
-            pady=10,
-            relief="groove",
-            bd=2,
-        )
+        output_frame = ctk.CTkFrame(self.window, corner_radius=10)
         output_frame.pack(pady=20)
 
-        output_path = tk.Entry(output_frame, textvariable=self.output_path, width=40)
-        output_path.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        title_output_label = ctk.CTkLabel(output_frame, text="Configurações de Saída")
+        title_output_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-        output_button = tk.Button(
-            output_frame, text="Selecionar Destino", command=self.select_output_path
+        output_path = ctk.CTkEntry(
+            output_frame,
+            textvariable=self.output_path,
+            width=350,
+            height=30,
+            corner_radius=8,
         )
-        output_button.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+        output_path.grid(row=1, column=0, padx=5, pady=5, sticky="w")
 
-        process_button = tk.Button(
-            self.window, text="Gerar Legenda", command=self.generate_subtitle
+        output_button = ctk.CTkButton(
+            output_frame,
+            text="Selecionar Destino",
+            command=self.select_output_path,
+            height=30,
+            cursor="hand2",
+        )
+        output_button.grid(row=1, column=1, padx=5, pady=5, sticky="w")
+
+        process_button = ctk.CTkButton(
+            master=self.window,
+            text="Gerar Legenda",
+            command=self.generate_subtitle,
+            height=30,
+            cursor="hand2",
         )
         process_button.pack(pady=10)
 
-        status_frame = tk.LabelFrame(
-            self.window, text="Logs", padx=10, pady=10, relief="groove", bd=2
-        )
-        status_frame.pack(pady=20)
+        status_frame = ctk.CTkFrame(self.window, corner_radius=10)
+        status_frame.pack(pady=20, padx=20)
 
-        status_label = tk.Label(status_frame, text="Status: ")
+        status_label = ctk.CTkLabel(status_frame, text="Status: ")
         status_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-        status_text = tk.Label(status_frame, textvariable=self.status)
+        status_text = ctk.CTkLabel(status_frame, textvariable=self.status)
         status_text.grid(row=0, column=1, padx=5, pady=5, sticky="w")
 
     def run(self):
