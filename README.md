@@ -2,6 +2,8 @@
 
 **EchoSub** é uma aplicação em Python que utiliza o modelo Whisper, da OpenAI, para gerar legendas automáticas a partir de vídeos.
 
+![EchoSub - Dashboard](public/echosub.png)
+
 ## 📦 Requisitos
 
 - Python 3.8 ou superior
@@ -13,8 +15,8 @@
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/EchoSub.git
-cd EchoSub
+git clone https://github.com/joserochadev/echosub.git
+cd echosub
 
 ```
 
@@ -37,5 +39,12 @@ poetry install
 
 ```bash
 ffmpeg --version
+```
 
+5. Inicie o EchoSub:
+
+> **⚠️ ATENÇÃO:** Ao utilizar um modelo do Whisper pela primeira vez, o sistema precisará fazer o download desse modelo. Esse processo pode levar algum tempo, dependendo da velocidade da sua conexão.
+
+```bash
+python app.py
 ```
