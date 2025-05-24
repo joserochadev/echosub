@@ -14,8 +14,10 @@ class GenerateSubtitleService:
         ms = int((seconds - int(seconds)) * 1000)
         return f"{h:02}:{m:02}:{s:02},{ms:03}"
 
-    def execute(self, video: Video, transcript: dict[str, str | list]):
-        subtitle_path = Path(f"output/subtitle/[subtitle] - {video.name}.srt")
+    def execute(
+        self, video: Video, transcript: dict[str, str | list], subtitle_path: str
+    ):
+        subtitle_path = Path(f"{subtitle_path}/[subtitle] - {video.name}.srt")
         subtitle_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(str(subtitle_path), "w", encoding="utf-8") as f:

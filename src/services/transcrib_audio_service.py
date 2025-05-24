@@ -4,9 +4,9 @@ import whisper
 
 
 class TranscribAudioService:
-    def execute(audio_path: Path) -> dict[str, str | list]:
-        model = whisper.load_model("tiny")
-        print("echosub - whisper model Tiny loaded!")
+    def execute(audio_path: Path, whisper_model: str) -> dict[str, str | list]:
+        model = whisper.load_model(whisper_model)
+        print(f"echosub - whisper model {whisper_model} loaded!")
 
         try:
             print("echosub - Starting trascription")
