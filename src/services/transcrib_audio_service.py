@@ -16,6 +16,8 @@ class TranscribAudioService:
 
             print("echosub - Transcription generated successfully! \n")
 
+            audio_path.unlink()  # remove o audio
+
         except Exception as e:
             raise Exception(f"Error: Unable to generate trascription \n {e}")
 
