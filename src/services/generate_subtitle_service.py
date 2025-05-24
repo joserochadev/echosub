@@ -22,9 +22,17 @@ class GenerateSubtitleService:
 
         with open(str(subtitle_path), "w", encoding="utf-8") as f:
             for i, segment in enumerate(transcript["segments"], 1):
-                start = segment["start"]
-                end = segment["end"]
+                words = segment["words"]
+
+                if not words:
+                    continue
+
+                phrase_start = words[0]["start"]
+                phrase_end = words[-1]["end"]
                 text = segment["text"].strip()
+
                 f.write(f"{i}\n")
-                f.write(f"{self.__format_time(start)} --> {self.__format_time(end)}\n")
+                f.write(
+                    f"{self.__format_time(phrase_start)} --> {self.__format_time(phrase_end)}\n"
+                )
                 f.write(f"{text}\n\n")

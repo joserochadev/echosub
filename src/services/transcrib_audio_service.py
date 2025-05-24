@@ -10,7 +10,9 @@ class TranscribAudioService:
 
         try:
             print("echosub - Starting trascription")
-            transcript = model.transcribe(str(audio_path), verbose=False)
+            transcript = model.transcribe(
+                str(audio_path), verbose=False, word_timestamps=True
+            )
 
             print("echosub - Transcription generated successfully! \n")
 
