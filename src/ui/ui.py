@@ -21,7 +21,7 @@ class UI:
         self.window = ctk.CTk()
 
         self.file_path = tk.StringVar()
-        self.status = tk.StringVar(value="Aguardado arquivo...")
+        self.status = tk.StringVar(value="Aguardando arquivo...")
 
         self.video: Video = None
         self.audio = None
