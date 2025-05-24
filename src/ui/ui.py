@@ -1,7 +1,7 @@
 import threading
 import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, messagebox
 
 import customtkinter as ctk
 
@@ -16,7 +16,7 @@ class UI:
     def __init__(self):
 
         ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("dark-blue")
+        ctk.set_default_color_theme("./src/ui/themes/lavender.json")
 
         self.window = ctk.CTk()
 
@@ -111,15 +111,6 @@ class UI:
         thread.start()
 
     def update(self):
-        # frame = tk.LabelFrame(
-        #     self.window,
-        #     text="Configurações de Entrada",
-        #     padx=10,
-        #     pady=10,
-        #     relief="groove",
-        #     bd=2,
-        # )
-        # frame.pack(pady=20)
 
         frame = ctk.CTkFrame(self.window, corner_radius=10)
         frame.pack(pady=20)

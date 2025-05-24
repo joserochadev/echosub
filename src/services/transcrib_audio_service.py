@@ -21,9 +21,9 @@ class TranscribAudioService:
         except Exception as e:
             raise Exception(f"Error: Unable to generate trascription \n {e}")
 
-        for segment in transcript["segments"]:
-            print(
-                f"[{segment['start']:.2f}s -> {segment['end']:.2f}s]: {segment['text']}"
-            )
+        # for segment in transcript["segments"]:
+        #     print(
+        #         f"[{segment['start']:.2f}s -> {segment['end']:.2f}s]: {segment['text']}"
+        #     )
 
         return transcript
