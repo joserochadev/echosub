@@ -10,7 +10,7 @@ class ExtractAudioService:
     def execute(video: Video) -> Path:
         audio_output_path = Path(f"output/{video.name}.wav")
         audio_output_path.parent.mkdir(parents=True, exist_ok=True)
-        num_threads = int(os.cpu_count() / 2)  # metade das threads do pc
+        num_threads = os.cpu_count()  # quantidade de threads da cpu
 
         try:
             print(f"echosub - Extracting audio using {num_threads} threads...")
