@@ -1,4 +1,5 @@
 import threading
+import time
 import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox
@@ -10,6 +11,24 @@ from ..services.extract_audio_service import ExtractAudioService
 from ..services.generate_subtitle_service import GenerateSubtitleService
 from ..services.load_video_file_service import LoadVideoFileService
 from ..services.transcrib_audio_service import TranscribAudioService
+
+
+def format_seconds_to_hms(total_seconds: float) -> str:
+    total_seconds = int(total_seconds)
+
+    minutes, seconds = divmod(total_seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+
+    parts = []
+
+    if hours > 0:
+        parts.append(f"{hours}h")
+    if minutes > 0:
+        parts.append(f"{minutes}m")
+    if seconds > 0 or not parts:
+        parts.append(f"{seconds}s")
+
+    return " ".join(parts) if parts else "0s"
 
 
 class UI:
@@ -48,7 +67,35 @@ class UI:
         # Define o tamanho + posição
         self.window.geometry(f"{width}x{height}+{x}+{y}")
 
-    def __precess_subtitle(self, path: str):
+    def __show_custom_info(self, title: str, message: str):
+        dialog = ctk.CTkToplevel(self.window)
+        dialog.title(title)
+
+        width = 400
+        height = 200
+        x = self.window.winfo_x() + (self.window.winfo_width() // 2) - (width // 2)
+        y = self.window.winfo_y() + (self.window.winfo_height() // 2) - (height // 2)
+        dialog.geometry(f"{width}x{height}+{x}+{y}")
+
+        dialog.transient(self.window)
+        dialog.update_idletasks()
+        dialog.grab_set()
+
+        label = ctk.CTkLabel(
+            dialog, text=message, font=ctk.CTkFont(size=14), wraplength=width - 40
+        )
+        label.pack(pady=20, padx=20, expand=True, fill="both")
+
+        button = ctk.CTkButton(
+            dialog, text="OK", command=dialog.destroy, width=100, cursor="hand2"
+        )
+        button.pack(pady=(0, 20))
+
+        dialog.wait_window()
+
+    def __process_subtitle(self, path: str):
+        start_total_time = time.perf_counter()
+
         print("whisper model", self.whisper_model.get())
 
         self.status.set("Carregando arquivo de video...")
@@ -56,13 +103,17 @@ class UI:
         self.status.set("Video carregado com sucesso!")
 
         self.status.set("Extraindo audio do video...")
+        start_extract_time = time.perf_counter()
         self.audio = ExtractAudioService.execute(self.video)
+        end_extract_time = time.perf_counter()
         self.status.set("Audio extraido com sucesso!")
 
         self.status.set("Gerando transcrição...")
+        start_transcribe_time = time.perf_counter()
         self.transcription = TranscribAudioService.execute(
             self.audio, self.whisper_model.get()
         )
+        end_transcribe_time = time.perf_counter()
         self.status.set("Transcrição gerada com sucesso!")
 
         GenerateSubtitleService().execute(
@@ -72,7 +123,31 @@ class UI:
         )
 
         self.status.set("Legenda gerada com sucesso!")
-        messagebox.showinfo("Sucesso", "Legenda gerada com sucesso!")
+        end_total_time = time.perf_counter()
+
+        extract_time = end_extract_time - start_extract_time
+        transcribe_time = end_transcribe_time - start_transcribe_time
+        total_time = end_total_time - start_total_time
+        rtf = transcribe_time / self.video.duration if self.video.duration > 0 else 0
+        # minutes, seconds = divmod(self.video.duration, 60)
+        # formated_duration = f"{int(minutes)}m {int(seconds)}s"
+
+        # metrics_summary = {
+        #     'duration': formated_duration,
+        #     ''
+        # }
+
+        metrics_summary = (
+            f"Legenda gerada com sucesso!\n\n"
+            f"Duração do Vídeo: {format_seconds_to_hms(self.video.duration)}\n"
+            f"Tempo de Extração: {format_seconds_to_hms(extract_time)}\n"
+            f"Tempo de Transcrição: {format_seconds_to_hms(transcribe_time)}\n"
+            f"Tempo Total: {format_seconds_to_hms(total_time)}\n"
+            f"Real-Time Factor (RTF): {rtf:.2f}"
+        )
+
+        # messagebox.showinfo("Sucesso", metrics_summary)
+        self.__show_custom_info("Sucesso", metrics_summary)
 
     def select_file(self):
         path = filedialog.askopenfilename(
@@ -98,15 +173,15 @@ class UI:
         path = self.file_path.get()
 
         if not path:
-            messagebox.showwarning(
-                "Aviso", "Por favor, selecione um arquivo de vídeo primeiro."
+            self.__show_custom_info(
+                "Aviso", "⚠️ Por favor, selecione um arquivo de vídeo primeiro."
             )
             return
 
         self.status.set("Processando...")
 
         thread = threading.Thread(
-            target=self.__precess_subtitle, args=(self.file_path.get(),)
+            target=self.__process_subtitle, args=(self.file_path.get(),)
         )
         thread.start()
 
